@@ -52,7 +52,6 @@ public class Weapon : MonoBehaviour
                     Batch();
                     weaponFlag = true;
                 }
-                Debug.Log(weaponFlag);
 
                 break;
             case 1:
