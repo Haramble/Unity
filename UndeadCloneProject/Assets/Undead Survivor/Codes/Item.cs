@@ -61,10 +61,10 @@ public class Item : MonoBehaviour
                 } else
                 {
                     float nextDamage = data.baseDamage;
-                    int nextCount = 0;
+                    int nextCount = 0; // 근접무기: 개수 증가, 원거리: 관통력 증가
 
                     nextDamage += data.baseDamage * data.damages[level];
-                    nextCount += data.counts[level];
+                    // nextCount += data.counts[level];
 
                     weapon.LevelUp(nextDamage, nextCount);
                 }

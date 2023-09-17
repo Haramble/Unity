@@ -28,11 +28,13 @@ public class Bullet : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (!collision.CompareTag("Enemy") || per == -100)
+        {
             return;
+        }
 
-        per--;
+        per--; // 원거리 무기의 경우 부딪혔을 때 per 감소
 
-        if (per < 0)
+        if (per < 0) // per 가 감소하여 0 이하가 되면 무기 사라짐.
         {
             rigid.velocity = Vector2.zero;
             gameObject.SetActive(false);

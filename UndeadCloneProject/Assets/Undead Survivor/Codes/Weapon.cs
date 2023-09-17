@@ -12,6 +12,7 @@ public class Weapon : MonoBehaviour
 
     // 하드코딩 
     public bool weaponFlag = true;
+    public bool weaponFlag2 = true;
     public int rotateCount = 0;
 
     float timer;
@@ -51,17 +52,33 @@ public class Weapon : MonoBehaviour
                     Batch();
                     weaponFlag = true;
                 }
+                Debug.Log(weaponFlag);
 
                 break;
             case 1:
                 timer += Time.deltaTime;
 
-                if (timer > speed)
+                //if (timer > speed)
+                //{
+                //    timer = 0f;
+                //    Fire();
+                //}
+                if (weaponFlag2 == true && timer > 0.1f) // 번개 유지시간
+                {
+                    timer = 0f;
+                    for (int i = 0; i < transform.childCount; i++)
+                    {
+                        transform.GetChild(i).GetComponent<Bullet>().BulletDelete();
+                    }
+                    weaponFlag2 = false;
+                }
+                else if (weaponFlag2 == false && timer > speed) // 번개 쿨타임
                 {
                     timer = 0f;
                     Fire();
-                    //HwaSan();
+                    weaponFlag2 = true;
                 }
+
                 break;
             default:
                 break;
@@ -69,7 +86,7 @@ public class Weapon : MonoBehaviour
 
         if (Input.GetButtonDown("Jump"))
         {
-            LevelUp(3, 1);
+            LevelUp(3, 0);
         }
     }
 
@@ -169,60 +186,24 @@ public class Weapon : MonoBehaviour
         rotateCount = (rotateCount + 1) % 6;
     }
 
-    void HwaSan()
-    {
-        Vector3[] hwaSanDir = {
-            new Vector3(1,1,0),
-            new Vector3(1,0,0),
-            new Vector3(1,-1,0),
-            new Vector3(-1,1,0),
-            new Vector3(-1,0,0),
-            new Vector3(-1,-1,0)
-        };
-        Vector3[] dirs = GetShuffleList<Vector3>(hwaSanDir);
-
-        for (int i=0; i<=count; i++)
-        {
-            Vector3 dir = dirs[i].normalized;
-            Transform bullet = GameManager.instance.pool.Get(prefabId).transform;
-            bullet.position = transform.position;
-            bullet.rotation = Quaternion.FromToRotation(Vector3.up, dir);
-
-            bullet.GetComponent<Bullet>().Init(damage, count, dir);
-        }
-    }
-
     void Fire()
     {
         if (player.scanner.nearestTarget == null)
             return;
 
-        Vector3 targetPos = player.scanner.nearestTarget.position;
+        //Vector3 targetPos = player.scanner.nearestTarget.position; // 가장 가까운 적 찾기
+        Vector3 targetPos = player.scanner.getRandomEnemy.position; // 랜덤 적 찾기
+
         Vector3 dir = targetPos - transform.position;
         dir = dir.normalized;
 
-        Transform bullet = GameManager.instance.pool.Get(prefabId).transform;
-        bullet.position = transform.position;
+        Transform bullet = GameManager.instance.pool.Get(prefabId).transform; // PoolManager 를 통해 무기 생성
+        bullet.parent = transform;
+        //bullet.position = transform.position;
+        bullet.position = targetPos;
         bullet.rotation = Quaternion.FromToRotation(Vector3.up, dir);
 
-        bullet.GetComponent<Bullet>().Init(damage, count, dir);
-    }
-
-    public T[] GetShuffleList<T>(T[] array)
-    {
-        int random1, random2;
-        T temp;
-
-        for (int i = 0; i < array.Length; ++i)
-        {
-            random1 = Random.Range(0, array.Length);
-            random2 = Random.Range(0, array.Length);
-
-            temp = array[random1];
-            array[random1] = array[random2];
-            array[random2] = temp;
-        }
-
-        return array;
+        //bullet.GetComponent<Bullet>().Init(damage, count, dir);
+        bullet.GetComponent<Bullet>().Init(damage, -100, dir);
     }
 }

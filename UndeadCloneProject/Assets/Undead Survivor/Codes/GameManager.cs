@@ -37,7 +37,7 @@ public class GameManager : MonoBehaviour
         health = maxHealth;
 
         // 임시 스크립트 (첫번째 캐릭터 선택)
-        uiLevelUp.Select(0); // 기본 무기 지급
+        uiLevelUp.Select(1); // 기본 무기 지급
         Resume();
     }
 

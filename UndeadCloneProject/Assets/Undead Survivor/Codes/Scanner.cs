@@ -8,11 +8,14 @@ public class Scanner : MonoBehaviour
     public LayerMask targetLayer;
     public RaycastHit2D[] targets;
     public Transform nearestTarget;
+    public Transform getRandomEnemy;
+    public PoolManager poolManager;
 
     private void FixedUpdate()
     {
         targets = Physics2D.CircleCastAll(transform.position, scanRange, Vector2.zero, 0, targetLayer);
         nearestTarget = GetNearest();
+        getRandomEnemy = GetRandomEnemy();
     }
 
     Transform GetNearest()
@@ -31,6 +34,18 @@ public class Scanner : MonoBehaviour
                 diff = curDiff;
                 result = target.transform;
             }
+        }
+
+        return result;
+    }
+
+    Transform GetRandomEnemy()
+    {
+        Transform result = null;
+
+        if (targets.Length > 0)
+        {
+            result = targets[Random.Range(0, targets.Length)].transform;
         }
 
         return result;
