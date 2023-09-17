@@ -175,7 +175,7 @@ public class Weapon : MonoBehaviour
 
             //Vector3 rotVec = Vector3.forward * 360 * i / count;
             Vector3 rotVec = batchRot[(rotateCount + i) % 6];
-            Debug.Log((rotateCount + i) % 6);
+            
             bullet.Rotate(rotVec);
             bullet.Translate(bullet.up * 1.5f, Space.World);
 
